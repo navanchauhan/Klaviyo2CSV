@@ -11,6 +11,15 @@ import datetime
 from time import mktime
 
 
+st.title("Klaviyo2CSV")
+
+url = "https://a.klaviyo.com/api/v1/metrics/timeline"
+headers = {"Accept": "application/json"}
+
+since_date = st.date_input("Data to be fetched since",value=datetime.datetime.today())
+
+private_key = st.text_input("Enter your Klaviyo Private API Key")
+
 def get_data_klaviyo(since,api_key=private_key,count="100",sort="desc"):
   querystring = {
       "api_key": private_key,
@@ -35,16 +44,6 @@ def get_combined_df(list_of_json):
 		df.append(pd.json_normalize(f))
 	return df
 
-st.title("Klaviyo2CSV")
-
-url = "https://a.klaviyo.com/api/v1/metrics/timeline"
-headers = {"Accept": "application/json"}
-
-since_date = st.date_input("Data to be fetched since",value=datetime.datetime.today())
-
-private_key = st.text_input("Enter your Klaviyo Private API Key")
-
-good_test = False
 
 if st.button("Test Connection"):
 	try:
