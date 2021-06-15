@@ -24,14 +24,10 @@ if st.button("Test Connection"):
 			st.text("Whoops! Invalid API Key")
 		elif res.status_code == 200:
 			st.text("Connection Sucessful")
-			good_test = True
 
 if st.button("Get Last 50 Events"):
-	if good_test:
-		querystring = {"api_key":private_key,"count":"50","sort":"desc"}
-		response = requests.request("GET", url, headers=headers, params=querystring)
-		j_data = response.json()
-		df = pd.normalize(j_data["data"])
-		df # <-- Print DataFrame
-	else:
-		st.text("Please Test Connection")
+	querystring = {"api_key":private_key,"count":"50","sort":"desc"}
+	response = requests.request("GET", url, headers=headers, params=querystring)
+	j_data = response.json()
+	df = pd.normalize(j_data["data"])
+	df # <-- Print DataFrame
