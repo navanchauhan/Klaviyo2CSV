@@ -10,6 +10,31 @@ import io
 import datetime
 from time import mktime
 
+
+def get_data_klaviyo(since,api_key=private_key,count="100",sort="desc"):
+  querystring = {
+      "api_key": private_key,
+      "count": count,
+      "sort": sort,
+      "since": since
+  }
+  response = requests.request("GET",url,headers=headers,params=querystring)
+  return response.json()
+
+def get_list_json(since):
+	list_of_json = []
+	next_v = since
+	while since != None:
+		json_data = get_data_klaviyo(since=since,sort="asc")
+		list_of_json.append(json_data["data"])
+		next_v = json_data["next"]
+
+def get_combined_df(list_of_json):
+	df = pd.json_normalize(list_of_json[0])
+	for f in list_of_json[::-1][:-1][::-1]:
+		df.append(pd.json_normalize(f))
+	return df
+
 st.title("Klaviyo2CSV")
 
 url = "https://a.klaviyo.com/api/v1/metrics/timeline"
@@ -33,10 +58,11 @@ if st.button("Test Connection"):
 			st.text("Connection Sucessful")
 
 if st.button("Get Last 100 Events"):
-	querystring = {"api_key":private_key,"count":"100","sort":"desc","since":int(mktime(since_date.timetuple()))}
-	response = requests.request("GET", url, headers=headers, params=querystring)
-	j_data = response.json()
-	df = pd.json_normalize(j_data["data"])
+	#querystring = {"api_key":private_key,"count":"100","sort":"desc","since":int(mktime(since_date.timetuple()))}
+	#response = requests.request("GET", url, headers=headers, params=querystring)
+	#j_data = response.json()
+	#df = pd.json_normalize(j_data["data"])
+	df = get_combined_df(get_list_json(int(mktime(since_date.timetuple()))))
 	df # <-- Print DataFrame
 	towrite = io.BytesIO()
 	downloaded_file = df.to_excel(towrite, encoding='utf-8', index=False, header=True)
