@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import klaviyo
 import requests
+import base64
+import io
 
 st.title("Klaviyo2CSV")
 
@@ -25,9 +27,15 @@ if st.button("Test Connection"):
 		elif res.status_code == 200:
 			st.text("Connection Sucessful")
 
-if st.button("Get Last 50 Events"):
-	querystring = {"api_key":private_key,"count":"50","sort":"desc"}
+if st.button("Get Last 100 Events"):
+	querystring = {"api_key":private_key,"count":"100","sort":"desc"}
 	response = requests.request("GET", url, headers=headers, params=querystring)
 	j_data = response.json()
 	df = pd.json_normalize(j_data["data"])
 	df # <-- Print DataFrame
+	towrite = io.BytesIO()
+	downloaded_file = df.to_excel(towrite, encoding='utf-8', index=False, header=True)
+	towrite.seek(0)
+	b64 = base64.b64encode(towrite.read()).decode()  # some strings
+	linko= f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="output.xlsx">Download Excel File</a>'
+	st.markdown(linko, unsafe_allow_html=True)
