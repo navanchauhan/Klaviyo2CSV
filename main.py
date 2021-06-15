@@ -7,12 +7,16 @@ import klaviyo
 import requests
 import base64
 import io
+import datetime
 
 st.title("Klaviyo2CSV")
 
 url = "https://a.klaviyo.com/api/v1/metrics/timeline"
-private_key = st.text_input("Enter your Klaviyo Private API Key")
 headers = {"Accept": "application/json"}
+
+since_date = st.date_time("Data to be fetched since",value=datetime.datetime.today())
+
+private_key = st.text_input("Enter your Klaviyo Private API Key")
 
 good_test = False
 
@@ -28,7 +32,7 @@ if st.button("Test Connection"):
 			st.text("Connection Sucessful")
 
 if st.button("Get Last 100 Events"):
-	querystring = {"api_key":private_key,"count":"100","sort":"desc"}
+	querystring = {"api_key":private_key,"count":"100","sort":"desc","since":int(datetime.datetime.timestamp(since_date))}
 	response = requests.request("GET", url, headers=headers, params=querystring)
 	j_data = response.json()
 	df = pd.json_normalize(j_data["data"])
