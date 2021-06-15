@@ -32,5 +32,6 @@ if st.button("Get Last 50 Events"):
 		response = requests.request("GET", url, headers=headers, params=querystring)
 		j_data = response.json()
 		df = pd.normalize(j_data["data"])
+		df # <-- Print DataFrame
 	else:
 		st.text("Please Test Connection")
