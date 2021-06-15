@@ -33,15 +33,17 @@ def get_data_klaviyo(since,api_key=private_key,count="100",sort="desc"):
 def get_list_json(since):
 	list_of_json = []
 	next_v = since
-	while since != None:
-		json_data = get_data_klaviyo(since=since,sort="asc")
-		list_of_json.append(json_data["data"])
-		next_v = json_data["next"]
+	with st.spinner('Fetching Data...'):
+		while since != None:
+			json_data = get_data_klaviyo(since=since,sort="asc")
+			list_of_json.append(json_data["data"])
+			next_v = json_data["next"]
 
 def get_combined_df(list_of_json):
 	df = pd.json_normalize(list_of_json[0])
-	for f in list_of_json[::-1][:-1][::-1]:
-		df.append(pd.json_normalize(f))
+	with st.spinner('Combining DataFrames...'):
+		for f in list_of_json[::-1][:-1][::-1]:
+			df.append(pd.json_normalize(f))
 	return df
 
 
