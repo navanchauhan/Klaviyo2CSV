@@ -29,5 +29,5 @@ if st.button("Get Last 50 Events"):
 	querystring = {"api_key":private_key,"count":"50","sort":"desc"}
 	response = requests.request("GET", url, headers=headers, params=querystring)
 	j_data = response.json()
-	df = pd.normalize(j_data["data"])
+	df = pd.json_normalize(j_data["data"])
 	df # <-- Print DataFrame
