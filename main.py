@@ -8,6 +8,7 @@ import requests
 import base64
 import io
 import datetime
+from time import mktime
 
 st.title("Klaviyo2CSV")
 
@@ -32,7 +33,7 @@ if st.button("Test Connection"):
 			st.text("Connection Sucessful")
 
 if st.button("Get Last 100 Events"):
-	querystring = {"api_key":private_key,"count":"100","sort":"desc","since":int(datetime.datetime.timestamp(since_date))}
+	querystring = {"api_key":private_key,"count":"100","sort":"desc","since":int(mktime(since_date.timetuple()))}
 	response = requests.request("GET", url, headers=headers, params=querystring)
 	j_data = response.json()
 	df = pd.json_normalize(j_data["data"])
