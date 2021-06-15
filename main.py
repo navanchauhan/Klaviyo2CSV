@@ -14,7 +14,7 @@ st.title("Klaviyo2CSV")
 url = "https://a.klaviyo.com/api/v1/metrics/timeline"
 headers = {"Accept": "application/json"}
 
-since_date = st.date_time("Data to be fetched since",value=datetime.datetime.today())
+since_date = st.date_input("Data to be fetched since",value=datetime.datetime.today())
 
 private_key = st.text_input("Enter your Klaviyo Private API Key")
 
