@@ -9,6 +9,7 @@ python = "^3.9"
 klaviyo = "^3.1.2"
 streamlit = "^0.82.0"
 watchdog = "^2.1.2"
+openpyxl = "^3.0.7"
 
 [tool.poetry.dev-dependencies]
 
